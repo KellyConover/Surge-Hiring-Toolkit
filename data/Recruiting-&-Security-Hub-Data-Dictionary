@@ -1,0 +1,82 @@
+# Recruiting & Security Hub — Data Dictionary
+
+## Candidates sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Candidate_ID         | Text       | Unique ID (e.g., C-0001)                          | Unique identifier for each candidate. |
+| First_Name           | Text       | Free text                                         | Candidate first name. |
+| Last_Name            | Text       | Free text                                         | Candidate last name. |
+| Source               | Dropdown   | Referral, Job Board, Agency, Internal, Other      | Where the candidate came from. |
+| Role_Applied_For     | Text       | Free text                                         | Position or role title. |
+| Clearance_Level      | Dropdown   | None, Public Trust, Secret, TS, TS/SCI            | Required clearance level. |
+| Candidate_Status     | Dropdown   | Applied, Screen, Interview, Offer, Hired, Rejected, On Hold | Current pipeline stage. |
+| Days_in_Stage        | Calculated | Integer                                           | Days candidate has been in current stage. |
+| Days_Since_Submission| Calculated | Integer                                           | Days since application or e-QIP submission. |
+| Recommendation       | Dropdown   | Strong Yes, Yes, Neutral, No                      | Interview recommendation summary. |
+
+## Interview Scores sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Candidate_ID         | Text       | Must match Candidates sheet                       | Links scores to candidate. |
+| Interviewer_Name     | Text       | Free text                                         | Interviewer name. |
+| Score_Technical      | Number     | 1–5                                               | Technical competency rating. |
+| Score_Behavioral     | Number     | 1–5                                               | Behavioral competency rating. |
+| Score_Overall        | Calculated | 1–5                                               | Average or weighted score. |
+| Total_Interview_Score| Calculated | Number                                            | Sum or weighted total of all interview scores. |
+
+## e-QIP / Security sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Candidate_ID         | Text       | Must match Candidates sheet                       | Links to candidate. |
+| EQIP_Status          | Dropdown   | Not Started, In Progress, Submitted, In Review, Approved, Rejected | e-QIP progress. |
+| EQIP_Submit_Date     | Date       | YYYY-MM-DD                                        | Date submitted. |
+| Days_Since_Submission| Calculated | Integer                                           | Days since e-QIP submission. |
+| Clearance_Status     | Dropdown   | Pending, Interim, Final, Denied                   | Clearance decision status. |
+
+## Documents / Checklist sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Candidate_ID         | Text       | Must match Candidates sheet                       | Links to candidate. |
+| Document_Type        | Dropdown   | Resume, Application, ID, Certification, Other     | Document category. |
+| Document_Status      | Dropdown   | Not Received, Received, Verified, Rejected        | Document verification status. |
+| Checklist_Item       | Text       | Free text                                         | Specific checklist step. |
+| Checklist_Status     | Dropdown   | Not Started, In Progress, Complete                | Progress on checklist item. |
+| Checklist_Priority   | Dropdown   | Low, Medium, High, Critical                       | Priority level. |
+| Checklist_Owner      | Text       | Free text                                         | Person responsible. |
+| Due_Date             | Date       | YYYY-MM-DD                                        | Due date for item. |
+| Days_Until_Due       | Calculated | Integer                                           | Days remaining until due date. |
+
+## Dashboard / Alerts (logical fields)
+
+You can describe calculated/derived fields even if they’re not raw columns:
+
+- **Pipeline_Counts:** Counts by `Candidate_Status`.
+- **EQIP_Status_Counts:** Counts by `EQIP_Status`.
+- **Clearance_Approval_Rate:**  
+  
+
+\[
+  \text{Approved} / (\text{Approved} + \text{Rejected})
+  \]
+
+
+- **Document_Completion_%:**  
+  
+
+\[
+  \text{Completed Checklist Items} / \text{Total Checklist Items}
+  \]
+
+
+- **Alerts:**
+  - **Stuck Candidates:** `Days_in_Stage > X` and `Candidate_Status` not in {Hired, Rejected}.
+  - **Stalled Clearances:** `Days_Since_Submission > Y` and `EQIP_Status` in {Submitted, In Review}.
+  - **Rejected Documents:** `Document_Status = Rejected`.
+  - **Overdue Tasks:** `Days_Until_Due < 0`.
+  - **Incomplete Packages:** `Document_Completion_% < threshold`.
+
+---
