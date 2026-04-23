@@ -1,0 +1,36 @@
+System overview
+Title: Surge Hiring Toolkit — Hybrid Hub Architecture
+
+Core idea:
+
+Hub 1: Recruiting & Security Hub
+
+Focus: “Getting people in the door”
+
+Combines: Pipeline Tracker, Interview Scorecard, e-QIP Manager, Recruiting Dashboard, Recruiting Checklist
+
+Hub 2: Operations & Employee Hub
+
+Focus: “Managing people once they’re here”
+
+Combines: Master Employee Tracker, Staffing Dashboard, Retention Tracker, Risk Register, RACI, QA Scores, Checklists, Alerts, Change Log
+
+Support documents (4 core docs):
+
+Surge Playbook (Slide Deck): Leadership briefing and surge strategy.
+
+Operations Guide (Word Doc): Master guide, activation protocol, QA monitoring plan, supervisor quick reference, daily standup agenda.
+
+New Hire Kit (Word Doc): Day One packet + activation notice.
+
+After-Action Report (Word Doc): Close-out and lessons learned.
+
+Why the hybrid model works:
+
+Natural split: Recruiting/Security vs. Operations/Employee lifecycle.
+
+Clean handoff: Candidate → Employee = Hub 1 → Hub 2.
+
+Version control sanity: 2 main spreadsheets instead of 1 mega-file.
+
+Automation-friendly: Each hub uses formulas, dropdowns, and conditional formatting to drive dashboards and alerts—no macros, no VBA.
