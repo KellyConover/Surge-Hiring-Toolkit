@@ -1,0 +1,99 @@
+# Operations & Employee Hub — Data Dictionary
+
+## Employees sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Employee_ID          | Text       | Unique ID (e.g., E-0001)                          | Unique identifier for each employee. |
+| First_Name           | Text       | Free text                                         | Employee first name. |
+| Last_Name            | Text       | Free text                                         | Employee last name. |
+| Role                 | Text       | Free text                                         | Job title or role. |
+| Employment_Status    | Dropdown   | Active, Onboarding, Leave, Terminated             | Current employment status. |
+| Hire_Date            | Date       | YYYY-MM-DD                                        | Date of hire. |
+| Days_Since_Hire      | Calculated | Integer                                           | Days since hire date. |
+| Remote_Readiness     | Dropdown   | Ready, Needs Equipment, Needs Training, Not Eligible | Remote work readiness. |
+| Clearance_Status     | Dropdown   | Pending, Interim, Final, Denied                   | Clearance status. |
+
+## Equipment sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Employee_ID          | Text       | Must match Employees sheet                        | Links to employee. |
+| Equipment_Type       | Dropdown   | Laptop, Monitor, Phone, Token, Other              | Equipment category. |
+| Equipment_Status     | Dropdown   | Not Assigned, Assigned, In Transit, Returned, Lost | Current status. |
+| Equipment_Due_Date   | Date       | YYYY-MM-DD                                        | Date equipment should be delivered/returned. |
+| Equipment_Due_Countdown | Calculated | Integer                                        | Days until due date. |
+
+## Training / QA sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Employee_ID          | Text       | Must match Employees sheet                        | Links to employee. |
+| Training_Name        | Text       | Free text                                         | Training course name. |
+| Training_Status      | Dropdown   | Not Started, In Progress, Complete, Failed        | Training completion status. |
+| Training_Completion_%| Calculated | 0–100                                             | Percent of required trainings completed. |
+| QA_Score             | Number     | 0–100                                             | QA evaluation score. |
+| QA_Date              | Date       | YYYY-MM-DD                                        | Date of QA evaluation. |
+| QA_Trend             | Calculated | Up, Flat, Down                                    | Trend based on recent scores. |
+
+## Retention / Check-ins sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Employee_ID          | Text       | Must match Employees sheet                        | Links to employee. |
+| Retention_Risk       | Dropdown   | Low, Medium, High, Critical                       | Risk of attrition. |
+| Last_Checkin_Date    | Date       | YYYY-MM-DD                                        | Last 1:1 or check-in. |
+| Next_Checkin_Due     | Date       | YYYY-MM-DD                                        | Next scheduled check-in. |
+| Days_Until_Checkin   | Calculated | Integer                                           | Days until next check-in. |
+| Checkin_Status       | Dropdown   | On Time, Overdue                                  | Check-in timeliness. |
+
+## Risk Register sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Risk_ID              | Text       | Unique ID (e.g., R-0001)                          | Unique risk identifier. |
+| Risk_Description     | Text       | Free text                                         | Description of risk. |
+| Severity             | Dropdown   | Low, Medium, High, Critical                       | Impact level. |
+| Probability          | Dropdown   | Low, Medium, High                                 | Likelihood. |
+| Risk_Score           | Calculated | Number                                            | Severity × Probability (or mapped). |
+| Risk_Status          | Dropdown   | Open, Mitigating, Closed                          | Current status. |
+
+## RACI sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Task_Name            | Text       | Free text                                         | Task or process. |
+| Role                 | Text       | Free text                                         | Role or position. |
+| RACI_Value           | Dropdown   | R, A, C, I                                        | Responsibility type. |
+| RACI_Color           | Conditional| N/A                                               | Color-coded for quick scanning. |
+
+## Checklist / Change Log sheet
+
+| Field Name           | Type        | Allowed Values / Format                           | Description |
+|----------------------|------------|---------------------------------------------------|-------------|
+| Item_ID              | Text       | Unique ID                                         | Checklist or change item. |
+| Item_Type            | Dropdown   | Checklist, Change                                 | Type of entry. |
+| Description          | Text       | Free text                                         | Description of task/change. |
+| Priority             | Dropdown   | Low, Medium, High, Critical                       | Priority level. |
+| Owner                | Text       | Free text                                         | Responsible person. |
+| Due_Date             | Date       | YYYY-MM-DD                                        | Due date. |
+| Status               | Dropdown   | Not Started, In Progress, Complete, Cancelled     | Current status. |
+| Days_Until_Due       | Calculated | Integer                                           | Days remaining. |
+
+## Dashboard / Alerts (logical fields)
+
+- **Headcount by Status:** Counts by `Employment_Status`.
+- **Equipment Fulfillment:** % of employees with all required equipment assigned.
+- **Training Completion %:** Average `Training_Completion_%` by team or cohort.
+- **QA Trends:** Rolling average of `QA_Score` over time.
+- **Risk Counts:** Count of open risks by `Severity`.
+- **Retention Rate / Attrition by Cohort:** Derived from `Employment_Status` and `Hire_Date`.
+- **Alerts (8 categories):**
+  - Low QA (`QA_Score < 70`).
+  - Overdue check-ins (`Days_Until_Checkin < 0`).
+  - Open critical risks (`Severity = Critical` and `Risk_Status = Open`).
+  - Failed training (`Training_Status = Failed`).
+  - Late equipment (`Equipment_Due_Countdown < 0` and `Equipment_Status != Returned`).
+  - Unreturned equipment (`Equipment_Status = Lost or Not Returned` if you define that).
+  - Overdue tasks (`Days_Until_Due < 0`).
+  - Employees not remote-ready (`Remote_Readiness != Ready`).
